@@ -33,7 +33,7 @@ _Work in Progress_
 
 ## Acknowledgments
 
-This project was inspired by [Map Tiles Downloader](https://github.com/AliFlux/MapTilesDownloader), created by [
+This project was inspired by [Map Tiles Downloader](https://github.com/AliFlux/MapTilesDownloader) created by [
 Ali Ashraf](https://github.com/AliFlux), which served as a valuable reference and source of inspiration. I extend my
 gratitude to him for his contributions to the open-source community.
 
