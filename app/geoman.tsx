@@ -66,6 +66,7 @@ const Geoman = (props: GeomanProps) => {
       leafletContainer.pm.removeControls();
       leafletContainer.pm.setGlobalOptions({ pmIgnore: true });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context]);
 
   return null;

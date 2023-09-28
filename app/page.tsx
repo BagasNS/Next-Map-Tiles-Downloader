@@ -89,6 +89,7 @@ export default function Page() {
   // Form Handlers Start
   // @ts-ignore
   const onDrop = useCallback(acceptedFiles => {
+    console.log(acceptedFiles);
     // Do something with the files
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
@@ -107,7 +108,7 @@ export default function Page() {
   // Map Handlers Start
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
 
-  const previewHandler = async () => {
+  const previewHandler = useCallback(async () => {
     const { geoJSON } = require('leaflet')
     if (previewLayer) {
       previewLayer.remove();
@@ -192,13 +193,14 @@ export default function Page() {
       allowRemoval: false,
       allowCutting: false
     })
-  }
+  }, [previewLayer, Map, fromZoom, toZoom, toast])
 
-  const removePreviewLayer = () => {
+  const removePreviewLayer = useCallback(() => {
     if (previewLayer) {
       previewLayer.remove();
     }
-  }
+  }, [previewLayer])
+  // react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (Map) {
@@ -212,7 +214,7 @@ export default function Page() {
         Map.removeEventListener('pm:remove');
       }
     }
-  }, [Map, previewLayer]);
+  }, [Map, previewLayer, removePreviewLayer]);
   // Map Handlers End
 
   return (
