@@ -7,9 +7,7 @@ import { readJSONFile, saveJSONFile } from "@/helper/server/file";
 // @ts-ignore
 import { Feature, FeatureCollection, Polygon } from "@turf/helpers";
 // @ts-ignore
-import booleanIntersects from "@turf/boolean-intersects";
-// @ts-ignore
-import { _getTileRect, lat2tile, long2tile } from "@/helper/spatial";
+import { lat2tile, long2tile } from "@/helper/spatial";
 // @ts-ignore
 import BBOX from "@turf/bbox";
 
@@ -32,12 +30,9 @@ export async function generateGridTilesMultiThread(numThreads: number, selectedR
   });
 
   if (dbCache) {
-    console.log('Calculation Cache Found!')
     // Read Cache File
     try {
       // return result from cache
-      // const cacheContent = fs.readFileSync(dbCache.resultFile, 'utf-8');
-      // return JSON.parse(cacheContent)
       return readJSONFile(dbCache.resultFile);
     } catch (e) {
       // silent error
@@ -108,7 +103,6 @@ export async function generateGridTilesMultiThread(numThreads: number, selectedR
   while (!isCompleted) {
     await sleep(100)
   }
-
 
   // Save Result to Cache Start
   const cacheFilename = randomUUID() + '.json';
