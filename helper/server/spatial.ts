@@ -113,13 +113,14 @@ export async function generateGridTilesMultiThread(numThreads: number, selectedR
 
     await prisma.calculationGridTileCache.upsert({
       where: {
-        region: JSON.stringify(selectedRegion),
-        zoomLevel
+        region_zoomLevel: {
+          region: JSON.stringify(selectedRegion),
+          zoomLevel
+        }
       },
       update: {
         region: JSON.stringify(selectedRegion),
         zoomLevel
-
       },
       create: {
         region: JSON.stringify(selectedRegion),
@@ -129,6 +130,7 @@ export async function generateGridTilesMultiThread(numThreads: number, selectedR
     })
   } catch (e) {
     // silent error
+    console.error('Failed Save Grid Tiles Calculation Cache', e)
   }
   // Save Result to Cache End
 
