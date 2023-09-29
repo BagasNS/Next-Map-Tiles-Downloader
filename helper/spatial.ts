@@ -72,10 +72,7 @@ export function isValidGeoJSON(json: JSON | string, geometryType?: GeometryTypes
       typeof obj.type === 'string' &&
       obj.features &&
       Array.isArray(obj.features)
-      // You can add more specific checks based on your requirements
     ) {
-      // Additional checks if needed
-      // Example: Check that each feature has valid geometry
       for (const feature of obj.features) {
         if (!feature.geometry || typeof feature.geometry !== 'object') {
           return false;
@@ -101,7 +98,6 @@ export function isValidGeoJSON(json: JSON | string, geometryType?: GeometryTypes
     // If any of the checks fail, it's not a valid GeoJSON
     return false;
   } catch (error) {
-    console.log(error)
     // JSON parsing error
     return false;
   }
