@@ -1,8 +1,8 @@
-const { parentPort, workerData } = require("worker_threads");
-const turf = require('@turf/turf')
+const { parentPort, workerData } = require('worker_threads');
+const turf = require('@turf/turf');
 
 function _tile2lat(y, z) {
-  var n = Math.PI - 2 * Math.PI * y / Math.pow(2, z);
+  const n = Math.PI - 2 * Math.PI * y / Math.pow(2, z);
   return (180 / Math.PI * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n))));
 }
 
