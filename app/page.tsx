@@ -28,9 +28,13 @@ import { useCallback, useEffect, useState } from "react";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import dynamic from "next/dynamic";
+import { Layer, Map } from "leaflet";
+import { isValidGeoJSON } from "@/helper/spatial";
+
 // @ts-ignore
 import { featureCollection, FeatureCollection } from "@turf/helpers";
-import { Layer, Map } from "leaflet";
+// @ts-ignore
+import dissolve from "@turf/dissolve";
 
 import MapSource from './maps-source.json';
 
@@ -89,9 +93,65 @@ export default function Page() {
   // Form Handlers Start
   // @ts-ignore
   const onDrop = useCallback(acceptedFiles => {
+    const { geoJSON } = require('leaflet')
+
     // Do something with the files
-  }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+    acceptedFiles.forEach((file: File) => {
+      const fileReader = new FileReader();
+
+      fileReader.onload = function (event) {
+        try {
+          const jsonString = event?.target?.result as string;
+          const jsonObject = JSON.parse(jsonString);
+
+          // Check Are JSON Object are valid geojson with type polygon / multi-polygon
+          if (!isValidGeoJSON(jsonObject, ['MultiPolygon', 'Polygon'])) {
+            return toast({
+              title: 'Invalid GeoJSON Data',
+              description: 'Make sure geometry type only Polygon and/or MultiPolygon',
+              status: 'error',
+              position: 'top',
+              isClosable: true
+            })
+          }
+
+          let geojsonData;
+          try {
+            geojsonData = dissolve(jsonObject)
+          } catch (e) {
+            // silent error
+            geojsonData = jsonObject
+          }
+
+          // Remove All Layer
+          Map?.eachLayer(layer => {
+            // @ts-ignore
+            if (layer.pm) {
+              layer.remove()
+            }
+          })
+
+          const layerGeoJSON = geoJSON(geojsonData);
+          // @ts-ignore
+          Map?.addLayer(layerGeoJSON, { pmIgnore: true });
+
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+        }
+      };
+
+      // Start reading the File
+      fileReader.readAsText(file);
+    });
+  }, [Map, toast])
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      'application/json': ['.geojson', '.json']
+    }
+  })
+
   const [fromZoom, setFromZoom] = useState(10)
   const [toZoom, setToZoom] = useState(10)
   const [mapSource, setMapSource] = useState('http://ecn.t0.tiles.virtualearth.net/tiles/r{quad}.jpeg?g=129&mkt=en&stl=H')
@@ -261,7 +321,7 @@ export default function Page() {
                       Select Geojson file
                     </Text>
                     <Text fontSize={'sm'} color={'red.500'}>
-                      extension must be .geojson
+                      extension must be .geojson or .json
                     </Text>
                     <Text fontSize={'md'} color={'red.500'}>
                       Only Support Polygon or Multi-Polygon
