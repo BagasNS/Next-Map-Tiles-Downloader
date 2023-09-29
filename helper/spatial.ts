@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Feature, featureCollection } from "@turf/helpers";
+import { Feature, featureCollection, GeometryTypes } from "@turf/helpers";
 // @ts-ignore
 import booleanOverlap from '@turf/boolean-overlap';
 // @ts-ignore
@@ -19,7 +19,7 @@ export function tile2long(x: number, z: number) {
 }
 
 export function tile2lat(y: number, z: number) {
-  var n = Math.PI - 2 * Math.PI * y / Math.pow(2, z);
+  const n = Math.PI - 2 * Math.PI * y / Math.pow(2, z);
   return (180 / Math.PI * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n))));
 }
 
@@ -53,4 +53,52 @@ export function joinIntersectingPolygons(polygons: Feature) {
 
   // Convert the feature collection to a GeoJSON object
   return featureCollection(resultFeatures);
+}
+
+export function isValidGeoJSON(json: JSON | string, geometryType?: GeometryTypes | Array<GeometryTypes>) {
+  try {
+    // Try to parse the JSON string
+    let obj;
+    if (typeof json === 'string') {
+      obj = JSON.parse(json as string);
+    } else {
+      obj = json
+    }
+
+    // Check for GeoJSON properties and structure
+    if (
+      obj &&
+      obj.type &&
+      typeof obj.type === 'string' &&
+      obj.features &&
+      Array.isArray(obj.features)
+    ) {
+      for (const feature of obj.features) {
+        if (!feature.geometry || typeof feature.geometry !== 'object') {
+          return false;
+        }
+
+        if (geometryType) {
+          if (Array.isArray(geometryType)) {
+            if (!geometryType.includes(feature.geometry.type)) {
+              return false;
+            }
+          } else {
+            if (!feature.geometry.type !== geometryType) {
+              return false;
+            }
+          }
+        }
+      }
+
+      // If all checks pass, it's a valid GeoJSON
+      return true;
+    }
+
+    // If any of the checks fail, it's not a valid GeoJSON
+    return false;
+  } catch (error) {
+    // JSON parsing error
+    return false;
+  }
 }

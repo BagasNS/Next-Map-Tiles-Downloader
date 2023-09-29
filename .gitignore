@@ -36,5 +36,7 @@ next-env.d.ts
 
 .env
 cache
-/prisma/*.db
+*.db
 .idea
+# Temporary Ignore Until All table settled
+/prisma/migrations
