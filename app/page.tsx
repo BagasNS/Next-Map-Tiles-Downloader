@@ -99,7 +99,7 @@ export default function Page() {
   const [outputDirectory, setOutputDirectory] = useState('{timestamp}');
   const [outputType, setOutputType] = useState('Directory')
   const [paralellDownload, setParalellDownload] = useState(4);
-  const [totalTileLength, setTotalTileLength] = useState(0);
+  const [totalTileLength, setTotalTileLength] = useState<number>(0);
 
   const maxZoom = MapSource.find(source => Object.values(source.options).some(option => mapSource.includes(option)))?.limits.max || 20;
   // Form Handlers End
@@ -334,7 +334,7 @@ export default function Page() {
                   </FormControl>
                 </HStack>
 
-                {previewLayer && (
+                {totalTileLength && (
                   <Text fontWeight={'bold'}>Total Tiles: {totalTileLength.toLocaleString('id-ID')}</Text>
                 )}
 
