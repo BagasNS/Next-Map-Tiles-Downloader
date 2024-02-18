@@ -14,10 +14,10 @@
   {
     "name": "Google Maps",
     "options": {
-      "Google Maps": "https://mt0.google.com/vt?lyrs=m&x={x}&s=&y={y}&z={z}",
-      "Google Maps Satellite": "https://mt0.google.com/vt?lyrs=s&x={x}&s=&y={y}&z={z}",
-      "Google Maps Hybrid": "https://mt0.google.com/vt?lyrs=h&x={x}&s=&y={y}&z={z}",
-      "Google Maps Terrain": "https://mt0.google.com/vt?lyrs=p&x={x}&s=&y={y}&z={z}"
+      "Google Maps": "https://mt0.google.com/vt?lyrs=m&x={x}&y={y}&z={z}",
+      "Google Maps Satellite": "https://mt0.google.com/vt?lyrs=s&x={x}&y={y}&z={z}",
+      "Google Maps Hybrid": "https://mt0.google.com/vt?lyrs=y&x={x}&y={y}&z={z}",
+      "Google Maps Terrain": "https://mt0.google.com/vt?lyrs=p&x={x}&y={y}&z={z}"
     },
     "limits": {
       "min": 1,
